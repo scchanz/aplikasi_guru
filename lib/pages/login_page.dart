@@ -1,4 +1,6 @@
+import 'package:aplikasi_ortu/pages/guru_page.dart';
 import 'package:flutter/material.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -106,7 +108,12 @@ class LoginScreen extends StatelessWidget {
 
                       // Login Button
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => DashboardPage()),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           minimumSize: const Size(double.infinity, 50),
@@ -147,3 +154,5 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
+    
+
