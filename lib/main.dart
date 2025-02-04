@@ -1,6 +1,7 @@
-
+import 'package:aplikasi_ortu/chatlist.dart';
 import 'package:aplikasi_ortu/grade.dart';
 import 'package:aplikasi_ortu/pages/guru.dart';
+import 'package:aplikasi_ortu/pages/laporan_guru.dart';
 import 'package:aplikasi_ortu/pages/login.dart';
 import 'package:aplikasi_ortu/pages/loginreg/absensi.dart';
 import 'package:aplikasi_ortu/pages/loginreg/berita_page.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home:  LoginScreen(),
+      home: LoginScreen(),
     );
   }
 }
@@ -73,11 +74,13 @@ class _DashboardPageState extends State<homeview> {
               children: [
                 Text(
                   'Selamat Datang',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Text(
                   'Purwanto Hermawan S.KON',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(
+                      //fontWeight: FontWeight.bold,
+                      fontSize: 12),
                 ),
               ],
             ),
@@ -89,29 +92,29 @@ class _DashboardPageState extends State<homeview> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue[300],
-              ),
+              //decoration: BoxDecoration(
+              //color: Colors.blue[300],
+              //),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: Colors.white,
+                    backgroundColor: const Color.fromARGB(255, 115, 115, 115),
                     child: Icon(Icons.person, color: Colors.blue, size: 40),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 18),
                   Text(
                     'Purwanto Hermawan S.KON',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
+                      //  color: Colors.white,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    'example@gmail.com',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    'wantoherman123@gmail.com',
+                    //style: TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ],
               ),
@@ -130,19 +133,24 @@ class _DashboardPageState extends State<homeview> {
               leading: Icon(Icons.message),
               title: Text('Laporan Guru'),
               onTap: () {
-                //Navigator.push(
-                  //context,
-                  //MaterialPageRoute(builder: (context) => LaporanGuruPage()), // Pastikan halaman LaporanGuruPage tersedia
-                //);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          LaporanGuru()), // Pastikan halaman LaporanGuruPage tersedia
+                );
               },
+            ),
+            Divider(
+              thickness: 1,
             ),
             ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
               onTap: () {
                 //Navigator.push(
-                  //context,
-                  //MaterialPageRoute(builder: (context) => SettingsPage()), // Pastikan halaman SettingsPage tersedia
+                //context,
+                //MaterialPageRoute(builder: (context) => SettingsPage()), // Pastikan halaman SettingsPage tersedia
                 //);
               },
             ),
@@ -150,10 +158,35 @@ class _DashboardPageState extends State<homeview> {
               leading: Icon(Icons.logout),
               title: Text('Logout'),
               onTap: () {
-               // Navigator.push(
-                 // context,
-                  //MaterialPageRoute(builder: (context) => LogoutPage()), // Pastikan halaman LogoutPage tersedia
-                //);
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Konfirmasi Logout"),
+                      content: Text("Apakah Anda yakin ingin logout?"),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Tutup dialog
+                          },
+                          child: Text("Batal"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context); // Tutup dialog
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      LoginScreen()), // Ganti halaman dengan LogoutPage
+                            );
+                          },
+                          child: Text("Logout"),
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
             ),
           ],
@@ -168,7 +201,7 @@ class _DashboardPageState extends State<homeview> {
         },
         children: [
           DashboardPage(),
-          Chatpage(),
+          ChatListPage(),
           NewsPage(),
           Absensi(),
           Grade(),
@@ -207,4 +240,3 @@ class _DashboardPageState extends State<homeview> {
     );
   }
 }
-
