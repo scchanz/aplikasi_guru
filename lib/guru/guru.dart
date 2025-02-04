@@ -1,4 +1,5 @@
-import 'package:aplikasi_ortu/profil.dart'; // Pastikan import halaman profil yang benar
+import 'package:aplikasi_ortu/guru/chatlist_page.dart';
+import 'package:aplikasi_ortu/guru/absensi_page.dart'; // Pastikan AbsensiPage diimpor
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -10,6 +11,7 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   late PageController _pageController;
   late Timer _timer;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -32,51 +34,105 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.cancel();
     _pageController.dispose();
     super.dispose();
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ChatListPage()),
+      );
+    } else if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AbsensiPage()), // Navigasi ke halaman Absensi
+      );
+    }
+  }
+
+  Widget _getSelectedPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return _buildHomePage();
+      case 2:
+        return Center(child: Text('News Page', style: TextStyle(fontSize: 24)));
+      case 4:
+        return Center(child: Text('Grade Page', style: TextStyle(fontSize: 24)));
+      default:
+        return _buildHomePage();
+    }
+  }
+
+  Widget _buildHomePage() {
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Page View Card Items',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 20),
+          _buildCardItem(),
+          SizedBox(height: 20),
+          Text('Presentase Mengajar',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          _buildTeachingProgress(),
+          SizedBox(height: 20),
+          Text('Jadwal Mengajar',
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Column(
+            children: List.generate(4, (index) => _buildScheduleItem()),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Berita',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 20),
-            _buildCardItem(),
-            SizedBox(height: 20),
-            Text('Presentase Mengajar',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.blue[700],
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildPercentageProgress('Mengajar Matematika', 70),
-                  _buildPercentageProgress('Mengajar Fisika', 85),
-                  _buildPercentageProgress('Mengajar Kimia', 90),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-            Text('Jadwal Mengajar',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 10),
-            Column(
-              children: List.generate(4, (index) => _buildScheduleItem()),
-            ),
-          ],
-        ),
+      appBar: AppBar(
+        backgroundColor: Colors.blue[300],
+        title: Text('Dashboard'),
+      ),
+      body: _getSelectedPage(),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue[900],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
+        type: BottomNavigationBarType.fixed,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: 'Messages',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.event),
+            label: 'News',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list),
+            label: 'Absensi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.note_add),
+            label: 'Grade',
+          ),
+        ],
       ),
     );
   }
@@ -93,49 +149,35 @@ class _DashboardPageState extends State<DashboardPage> {
             height: 150,
             margin: EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 54, 103, 171),
+              color: Colors.blue,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      'assets/images/image.png',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Yoga',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      'Ah mantap',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            child: Center(
+              child: Text(
+                'Card ${index + 1}',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildTeachingProgress() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.blue[700],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildPercentageProgress('Mengajar Matematika', 70),
+          _buildPercentageProgress('Mengajar Fisika', 85),
+          _buildPercentageProgress('Mengajar Kimia', 90),
+        ],
       ),
     );
   }
